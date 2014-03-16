@@ -23,13 +23,13 @@
     [task setUrgency:[[urgency text]intValue] ];
     [task setName:[name text]];
     [task setDueDate:[datePicker date]];
+    [self.navigationController popViewControllerAnimated:YES];
      }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [urgency setText:[NSString stringWithFormat:@ "%d", [task urgency]]];
-    slider.maximumValue = 9;
-    slider.minimumValue = 0;
+    slider.value = task.urgency;
     [datePicker setDate:[task dueDate]];
     [name setText:[task name]];
     

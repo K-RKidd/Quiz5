@@ -26,17 +26,16 @@
         [[self navigationItem] setLeftBarButtonItem:[self editButtonItem]];
         ////// making the tasks///////////////////
         allTasks = [[NSMutableArray alloc]init];
-        NSDate *today = [NSDate date];
-        NSTimeInterval *timeIntervalInsec = 86400;
-        for (int i =0; i<9; i++){
-            int randomUrgency = arc4random() % 9;
-            today = [NSDate dateWithTimeIntervalSinceNow:*timeIntervalInsec];
-            _task = [[Tasks alloc]init];
+      
+        for (int i =0; i<10; i++){
+            
+             _task = [[Tasks alloc]init];
+            _task.urgency = i;
+           
             _task.name = [NSString stringWithFormat:@ "Task %d", i];
-            _task.dueDate = today;
-            _task.urgency = randomUrgency;
+            _task.dueDate = [NSDate dateWithTimeIntervalSinceNow:i*(60*60*24)];
+          
                 [allTasks addObject:_task];
-            timeIntervalInsec = timeIntervalInsec + 86400;
            }
         ///////////////////////////////////////////////
         
@@ -84,32 +83,17 @@
     
     ////////////// image for cell with urgency 6 or over
     
-    UIImage *image = [UIImage imageWithContentsOfFile:@"urgent.jpg" ];
+    UIImage *image = [UIImage imageNamed: @"urgent.jpg" ];
     if (task.urgency > 6){
-       cell.imageView.image;
+        [cell.imageView setImage:image];
    }else { cell.imageView.image = nil;}
     
+    ///date
+    NSDateFormatter *df = [[NSDateFormatter alloc]init];
+    [df setDateStyle:NSDateFormatterLongStyle];
+    [[cell detailTextLabel] setText:[df stringFromDate:task.dueDate]];
     ////////// color for the cells
-    if (task.urgency <= 0){
-        [cell setBackgroundColor:[UIColor greenColor]];
-    }else if (task.urgency > 0 && task.urgency <=1 ){
-         [cell setBackgroundColor:[UIColor colorWithRed:0.1 green:0.9 blue:0.0 alpha:0.5]];
-    }else if (task.urgency > 1 && task.urgency <=2){
-        [cell setBackgroundColor:[UIColor colorWithRed:0.2 green:0.8 blue:0.0 alpha:0.5]];
-    }else if (task.urgency > 2 && task.urgency <=3 ){
-        [cell setBackgroundColor:[UIColor colorWithRed:0.3 green:0.7 blue:0.0 alpha:0.5]];
-    }else if (task.urgency > 3 && task.urgency <=4 ){
-        [cell setBackgroundColor:[UIColor colorWithRed:0.4 green:0.6 blue:0.0 alpha:0.5]];
-    }else if (task.urgency > 4 && task.urgency <=5 ){
-        [cell setBackgroundColor:[UIColor colorWithRed:0.5 green:0.5 blue:0.0 alpha:0.5]];
-    }else if (task.urgency > 5 && task.urgency <=6 ){
-        [cell setBackgroundColor:[UIColor colorWithRed:0.6 green:0.4 blue:0.0 alpha:0.5]];
-    }else if (task.urgency > 6 && task.urgency <=7 ){
-        [cell setBackgroundColor:[UIColor colorWithRed:0.7 green:0.3 blue:0.0 alpha:0.5]];
-    }else if (task.urgency > 7 && task.urgency <=8 ){
-        [cell setBackgroundColor:[UIColor colorWithRed:0.8 green:0.2 blue:0.0 alpha:0.5]];
-    }else if (task.urgency > 8 && task.urgency <=9 ){
-        [cell setBackgroundColor:[UIColor redColor]];}
+    [cell setBackgroundColor:[UIColor colorWithRed:task.urgency/10.0 green:1.0-(task.urgency/10.4) blue:0 alpha:0.5]];
     
     return cell;
     
@@ -118,6 +102,11 @@
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [allTasks sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        Tasks *t1 = obj1;
+        Tasks *t2 = obj2;
+        return [t1.dueDate compare:t2.dueDate];
+    }];
     [[self tableView] reloadData];
 }
 
