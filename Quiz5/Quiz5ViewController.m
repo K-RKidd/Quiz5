@@ -94,6 +94,7 @@
     [[cell detailTextLabel] setText:[df stringFromDate:task.dueDate]];
     ////////// color for the cells
     [cell setBackgroundColor:[UIColor colorWithRed:task.urgency/10.0 green:1.0-(task.urgency/10.4) blue:0 alpha:0.5]];
+    [cell.textLabel setBackgroundColor:[UIColor clearColor]];
     
     return cell;
     
